@@ -1,0 +1,30 @@
+# Content Pipeline Workflow
+#
+# Triggers the next stage when a file lands in a stage folder.
+# Skeleton — wire each job to the model API when ready.
+# API keys: GitHub Secrets, never in the repo.
+
+name: Content Pipeline
+
+on:
+  push:
+    paths:
+      - 'posts/**/01-draft.md'
+      - 'posts/**/02-critique.md'
+
+jobs:
+  draft-to-critique:
+    runs-on: ubuntu-latest
+    if: github.event.head_commit.added != ''
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run critique stage
+        run: echo "Critique stage triggered — connect critique model API here"
+
+  critique-to-polish:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.added, '02-critique.md')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run polish stage
+        run: echo "Polish stage triggered — connect polish model API here"
